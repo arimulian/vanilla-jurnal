@@ -14,7 +14,7 @@ class AuthController extends Controller
     public function login(UserRequest $request): JsonResponse
     {
         $credentials = $request->validated();
-        $user =  $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json([
                 'message' => 'email or password is wrong'
@@ -25,5 +25,12 @@ class AuthController extends Controller
             'user' => new UserResource($user),
             'token' => $token
         ]);
+    }
+    public function unauthenticated()
+    {
+        return response()->json([
+            "status" => false,
+            "message" => "Unauthenticated. Please login first",
+        ], 401);
     }
 }

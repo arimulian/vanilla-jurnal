@@ -5,14 +5,14 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UserRequest extends FormRequest
+class CategoryUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user() != null;
     }
 
     /**
@@ -23,12 +23,12 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|string|email|max:255',
-            'password' => 'required',
+            'name' => 'required|string|max:255',
+            'category_type' => 'required|string',
         ];
     }
 
-    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator): never
+    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
     {
         throw new HttpResponseException(response()->json([
             'message' => 'validation error',
