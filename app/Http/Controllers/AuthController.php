@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -26,11 +27,21 @@ class AuthController extends Controller
             'token' => $token
         ]);
     }
+
     public function unauthenticated()
     {
         return response()->json([
             "status" => false,
             "message" => "Unauthenticated. Please login first",
         ], 401);
+    }
+
+    public function logout(): JsonResponse
+    {
+        $user = Auth::user();
+        $user->tokens()->delete();
+        return response()->json([
+            'message' => 'Logged out successfully'
+        ]);
     }
 }
