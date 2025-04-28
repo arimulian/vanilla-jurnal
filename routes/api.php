@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\EmployeeController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -37,4 +39,25 @@ Route::middleware('auth:sanctum')->group(function () {
         ->name('products.update');
     Route::delete('/products/delete/{slug}', [ProductController::class, 'delete'])
         ->name('products.delete');
+
+    // Customers
+    Route::post('/customers/create', [CustomerController::class, 'create'])
+        ->name('customers.create');
+    Route::get('/customers/get', [CustomerController::class, 'get'])
+        ->name('customers.get');
+    Route::put('/customers/update/{id}', [CustomerController::class, 'update'])
+        ->name('customers.update');
+    Route::delete('/customers/delete/{id}', [CustomerController::class, 'delete'])
+        ->name('customers.delete');
+
+    // Employees
+
+    Route::post('/employees/create', [EmployeeController::class, 'create'])
+        ->name('employees.create');
+    Route::get('/employees/get', [EmployeeController::class, 'get'])
+        ->name('employees.get');
+    Route::put('/employees/update/{id}', [EmployeeController::class, 'update'])
+        ->name('employees.update');
+    Route::delete('/employees/delete/{id}', [EmployeeController::class, 'delete'])
+        ->name('employees.delete');
 });

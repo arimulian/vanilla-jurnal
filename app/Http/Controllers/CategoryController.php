@@ -58,6 +58,7 @@ class CategoryController extends Controller
         }
         $category->query()->where('slug', $category->slug)->delete();
         return response()->json([
+
             'data' => true,
         ]);
     }

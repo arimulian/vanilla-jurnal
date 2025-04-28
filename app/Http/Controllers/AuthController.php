@@ -30,10 +30,7 @@ class AuthController extends Controller
 
     public function unauthenticated()
     {
-        return response()->json([
-            "status" => false,
-            "message" => "Unauthenticated. Please login first",
-        ], 401);
+        abort(401, 'Unauthenticated');
     }
 
     public function logout(): JsonResponse

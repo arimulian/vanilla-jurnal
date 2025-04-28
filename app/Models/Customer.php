@@ -8,4 +8,5 @@ class Customer extends Model
 {
     protected $table = 'customers';
     protected $guarded = false;
+    protected $dateFormat = 'Y-m-d H:i:s';
 }

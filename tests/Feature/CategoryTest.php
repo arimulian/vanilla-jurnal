@@ -6,7 +6,6 @@ use Laravel\Sanctum\Sanctum;
 
 use function Pest\Laravel\deleteJson;
 use function Pest\Laravel\postJson;
-use function Pest\Laravel\put;
 use function Pest\Laravel\putJson;
 
 afterEach(function () {
