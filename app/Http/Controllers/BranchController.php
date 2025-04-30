@@ -46,4 +46,14 @@ class BranchController extends Controller
             'data' => $branch->toArray()
         ]);
     }
+
+    public function delete(int $id)
+    {
+        $branch = $this->findById($id);
+        $branch->delete();
+        return response()->json([
+            'message' => 'Branch deleted successfully',
+            'data' => true
+        ]);
+    }
 }

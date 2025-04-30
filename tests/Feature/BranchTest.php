@@ -1,9 +1,11 @@
 <?php
 
 use App\Models\Branch;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\Sanctum;
 
+use function Pest\Laravel\deleteJson;
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
 
@@ -21,7 +23,7 @@ test('create branch success', function () {
         'address' => '123 Main St',
     ], [
         'Authorization' => Sanctum::actingAs(
-            \App\Models\User::factory()->create(),
+            User::factory()->create(),
             ['*']
         ),
         'Accept' => 'application/json',
@@ -44,7 +46,7 @@ test('create branch failed', function () {
         'address' => '',
     ], [
         'Authorization' => Sanctum::actingAs(
-            \App\Models\User::factory()->create(),
+            User::factory()->create(),
             ['*']
         ),
         'Accept' => 'application/json',
@@ -72,7 +74,7 @@ test('create branch duplicate name', function () {
         'address' => '123 Main St',
     ], [
         'Authorization' => Sanctum::actingAs(
-            \App\Models\User::factory()->create(),
+            User::factory()->create(),
             ['*']
         ),
         'Accept' => 'application/json',
@@ -96,7 +98,7 @@ test('get branches success', function () {
     ]);
     $response = getJson('api/branches/get', [
         'Authorization' => Sanctum::actingAs(
-            \App\Models\User::factory()->create(),
+            User::factory()->create(),
             ['*']
         ),
         'Accept' => 'application/json',
@@ -118,7 +120,7 @@ test('get branch by id success', function () {
     ]);
     $response = getJson('api/branches/get/' . $branch->id, [
         'Authorization' => Sanctum::actingAs(
-            \App\Models\User::factory()->create(),
+            User::factory()->create(),
             ['*']
         ),
         'Accept' => 'application/json',
@@ -138,7 +140,7 @@ test('get branch by id success', function () {
 test('get branch by id failed', function () {
     $response = getJson('api/branches/get/999', [
         'Authorization' => Sanctum::actingAs(
-            \App\Models\User::factory()->create(),
+            User::factory()->create(),
             ['*']
         ),
         'Accept' => 'application/json',
@@ -147,5 +149,31 @@ test('get branch by id failed', function () {
     $response->assertStatus(404)
         ->assertJson([
             'message' => 'Branch not found',
+        ]);
+});
+
+// DELETE Branch
+test('delete branch success', function () {
+    $branch = new Branch();
+    if ($branch->query()->count() === 0) {
+        $branch->query()->create([
+            'name' => 'Branch 1',
+            'address' => '123 Main St',
+        ]);
+    }
+
+    $response = deleteJson('/api/branches/delete/1', [], [
+        'Authorization' => Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        ),
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json'
+    ]);
+
+    $response->assertStatus(200)
+        ->assertJson([
+            'message' => 'Branch deleted successfully',
+            'data' => true
         ]);
 });
