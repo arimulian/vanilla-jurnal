@@ -102,12 +102,12 @@ test('get branches success', function () {
         'Accept' => 'application/json',
         'Content-Type' => 'application/json',
     ]);
+
     $data = Branch::query()->get();
     $response->assertStatus(200)
         ->assertJson([
             'data' => $data->toArray(),
         ]);
-
     Log::debug('Branch data:', $data->toArray());
 });
 
@@ -132,5 +132,20 @@ test('get branch by id success', function () {
                 'address' => '123 Main St',
                 'is_active' => 1,
             ],
+        ]);
+});
+
+test('get branch by id failed', function () {
+    $response = getJson('api/branches/get/999', [
+        'Authorization' => Sanctum::actingAs(
+            \App\Models\User::factory()->create(),
+            ['*']
+        ),
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json',
+    ]);
+    $response->assertStatus(404)
+        ->assertJson([
+            'message' => 'Branch not found',
         ]);
 });

@@ -247,3 +247,19 @@ test('get employee by id success', function () {
             'data' => $employee->toArray(),
         ]);
 });
+
+test('get employee by id not found', function () {
+    $response = getJson('api/employees/get/1', [
+        'authorization' => Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        ),
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json',
+    ]);
+
+    $response->assertStatus(404)
+        ->assertJson([
+            'message' => 'Employee not found',
+        ]);
+});

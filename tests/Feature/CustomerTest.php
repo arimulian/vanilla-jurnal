@@ -178,3 +178,18 @@ test('Customer get by id success', function () {
             'data' => $customer->query()->find(1)->toArray()
         ]);
 });
+
+test('Customer get by id not found', function () {
+    $response = getJson('/api/customers/get/1', [
+        'authorization' => Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        ),
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json',
+    ]);
+    $response->assertStatus(404)
+        ->assertJson([
+            'message' => 'Customer not found',
+        ]);
+});

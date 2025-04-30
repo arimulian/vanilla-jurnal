@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BranchCreateRequest;
 use App\Models\Branch;
-use Illuminate\Http\Request;
+use Illuminate\Http\Exceptions\HttpResponseException;
+
 
 class BranchController extends Controller
 {
@@ -13,14 +14,12 @@ class BranchController extends Controller
     {
         $branch = Branch::query()->find($branchId);
         if (!$branch) {
-            return response()->json([
+            throw new HttpResponseException(response()->json([
                 'message' => 'Branch not found',
-            ], 404);
+            ], 404));
         }
         return $branch;
     }
-
-
 
     public function create(BranchCreateRequest $request)
     {
