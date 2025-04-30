@@ -221,3 +221,29 @@ test('delete employee success', function () {
             'data' => true,
         ]);
 });
+
+test('get employee by id success', function () {
+    if (Employee::query()->count() === 0) {
+        Employee::create([
+            'name' => 'John Doe',
+            'position' => 'employee',
+            'salary' => 50000,
+            'hire_date' => '2023-10-01',
+            'status' => 'active',
+        ]);
+    }
+    $response = getJson('api/employees/get/1', [
+        'authorization' => Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        ),
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json',
+    ]);
+
+    $employee = Employee::query()->find(1);
+    $response->assertStatus(200)
+        ->assertJson([
+            'data' => $employee->toArray(),
+        ]);
+});

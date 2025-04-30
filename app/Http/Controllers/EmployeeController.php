@@ -50,6 +50,14 @@ class EmployeeController extends Controller
         ], 200);
     }
 
+    public function getById(int $id)
+    {
+        $employee = $this->findById($id);
+        return response()->json([
+            'data' => $employee,
+        ], 200);
+    }
+
     public function update(EmployeeUpdateRequest $request, int $id)
     {
         $validatedData = $request->validated();

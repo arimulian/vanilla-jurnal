@@ -154,3 +154,27 @@ test('Customer update not found', function () {
             'message' => 'Customer not found',
         ]);
 });
+
+test('Customer get by id success', function () {
+    $customer = new Customer();
+    if (!$customer->exists()) {
+        $customer->query()->create([
+            'name' => 'John Doe',
+            'email' => 'test@test.com',
+            'phone' => '1234567890',
+            'address' => '123 Main St',
+        ]);
+    }
+    $response = getJson('/api/customers/get/1', [
+        'authorization' => Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        ),
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json',
+    ]);
+    $response->assertStatus(200)
+        ->assertJson([
+            'data' => $customer->query()->find(1)->toArray()
+        ]);
+});

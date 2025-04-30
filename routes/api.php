@@ -3,6 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
@@ -45,19 +46,30 @@ Route::middleware('auth:sanctum')->group(function () {
         ->name('customers.create');
     Route::get('/customers/get', [CustomerController::class, 'get'])
         ->name('customers.get');
+    Route::get('/customers/get/{id}', [CustomerController::class, 'getById'])
+        ->name('customers.getById');
     Route::put('/customers/update/{id}', [CustomerController::class, 'update'])
         ->name('customers.update');
     Route::delete('/customers/delete/{id}', [CustomerController::class, 'delete'])
         ->name('customers.delete');
 
     // Employees
-
     Route::post('/employees/create', [EmployeeController::class, 'create'])
         ->name('employees.create');
     Route::get('/employees/get', [EmployeeController::class, 'get'])
         ->name('employees.get');
+    Route::get('/employees/get/{id}', [EmployeeController::class, 'getById'])
+        ->name('employees.getById');
     Route::put('/employees/update/{id}', [EmployeeController::class, 'update'])
         ->name('employees.update');
     Route::delete('/employees/delete/{id}', [EmployeeController::class, 'delete'])
         ->name('employees.delete');
+
+    // Branches
+    Route::post('/branches/create', [BranchController::class, 'create'])
+        ->name('branches.create');
+    Route::get('/branches/get', [BranchController::class, 'get'])
+        ->name('branches.get');
+    Route::get('/branches/get/{branchId}', [BranchController::class, 'getById'])
+        ->name('branches.getById');
 });
