@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BranchCreateRequest;
+use App\Http\Requests\BranchUpdateRequest;
 use App\Models\Branch;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
@@ -54,6 +55,17 @@ class BranchController extends Controller
         return response()->json([
             'message' => 'Branch deleted successfully',
             'data' => true
+        ]);
+    }
+
+    public function update(BranchUpdateRequest $request, int $branchId)
+    {
+        $branch = $this->findById($branchId);
+        $validatedData = $request->validated();
+        $branch->update($validatedData);
+        return response()->json([
+            'message' => 'Branch updated successfully',
+            'data' => $branch
         ]);
     }
 }

@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
-class BranchCreateRequest extends FormRequest
+class BranchUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,14 +24,7 @@ class BranchCreateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', 'unique:branches,name,'],
             'address' => ['required', 'string', 'max:255'],
+            'is_active' => ['boolean'],
         ];
-    }
-
-    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'message' => 'Validation failed',
-            'errors' => $validator->getMessageBag(),
-        ], 400));
     }
 }

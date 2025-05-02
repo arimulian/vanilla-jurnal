@@ -74,4 +74,6 @@ Route::middleware('auth:sanctum')->group(function () {
         ->name('branches.getById');
     Route::delete('/branches/delete/{id}', [BranchController::class, 'delete'])
         ->name('branches.delete');
+    Route::put('/branches/update/{branchId}', [BranchController::class, 'update'])
+        ->name('branches.update');
 });

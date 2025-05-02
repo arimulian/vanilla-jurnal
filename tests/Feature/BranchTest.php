@@ -8,6 +8,7 @@ use Laravel\Sanctum\Sanctum;
 use function Pest\Laravel\deleteJson;
 use function Pest\Laravel\getJson;
 use function Pest\Laravel\postJson;
+use function Pest\Laravel\putJson;
 
 afterEach(function () {
     // Clean up the database after each test
@@ -110,7 +111,6 @@ test('get branches success', function () {
         ->assertJson([
             'data' => $data->toArray(),
         ]);
-    Log::debug('Branch data:', $data->toArray());
 });
 
 test('get branch by id success', function () {
@@ -175,5 +175,92 @@ test('delete branch success', function () {
         ->assertJson([
             'message' => 'Branch deleted successfully',
             'data' => true
+        ]);
+});
+
+// PUT Branch
+test('update branch success', function () {
+    $branch = new Branch();
+    if ($branch->query()->count() === 0) {
+        $branch->query()->create([
+            'name' => 'Branch 1',
+            'address' => '123 Main St',
+        ]);
+    }
+
+    $response = putJson('/api/branches/update/1', [
+        'name' => 'Branch 2',
+        'address' => '456 Main St',
+    ], [
+        'Authorization' => Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        ),
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json'
+    ]);
+
+    $response->assertStatus(200)
+        ->assertJson([
+            'message' => 'Branch updated successfully',
+            'data' => [
+                'id' => 1,
+                'name' => 'Branch 2',
+                'address' => '456 Main St',
+                'is_active' => 1,
+            ]
+        ]);
+});
+
+test('update branch is_active', function () {
+    $branch = new Branch();
+    if ($branch->query()->count() === 0) {
+        $branch->query()->create([
+            'name' => 'Branch 1',
+            'address' => '123 Main St',
+        ]);
+    }
+
+    $response = putJson('/api/branches/update/1', [
+        'name' => 'Branch 2',
+        'address' => '123 Main St',
+        'is_active' => 0,
+    ], [
+        'Authorization' => Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        ),
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json'
+    ]);
+
+    $response->assertStatus(200)
+        ->assertJson([
+            'message' => 'Branch updated successfully',
+            'data' => [
+                'id' => 1,
+                'name' => 'Branch 2',
+                'address' => '123 Main St',
+                'is_active' => 0,
+            ]
+        ]);
+});
+
+test('update branch not found', function () {
+    $response = putJson('/api/branches/update/1', [
+        'name' => 'test',
+        'address' => 'test',
+    ], [
+        'Authorization' => Sanctum::actingAs(
+            User::factory()->create(),
+            ['*']
+        ),
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json'
+    ]);
+
+    $response->assertStatus(404)
+        ->assertJson([
+            'message' => 'Branch not found',
         ]);
 });
