@@ -16,4 +16,9 @@ class Branch extends Model
         'address',
         'is_active',
     ];
+
+    public function sales()
+    {
+        return $this->hasMany(Sales::class);
+    }
 }
