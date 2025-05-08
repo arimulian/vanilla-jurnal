@@ -22,4 +22,13 @@ class SalesController extends Controller
             'data' => $sales
         ], 201);
     }
+
+    public function get()
+    {
+        $sales = $this->salesService->getAllSales();
+
+        return response()->json([
+            'data' => $sales
+        ], 200);
+    }
 }

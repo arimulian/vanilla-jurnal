@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Product;
 use App\Models\Sales;
 use App\Models\SalesItem;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 
@@ -38,7 +39,7 @@ class SalesService
                          'product_id' => $item['product_id'],
                          'quantity' => $item['quantity'],
                          'unit_price' => $item['unit_price'],
-                         'total_price' => $item['quantity'] * $item['unit_price'],
+
                     ]);
                     // Update product stock
                     Product::where('id', '=', $item['product_id'])
@@ -47,5 +48,10 @@ class SalesService
 
                return $sales->toArray();
           });
+     }
+
+     public function getAllSales(): array
+     {
+          return Sales::with(['salesItems.product', 'branch'])->get()->toArray();
      }
 }

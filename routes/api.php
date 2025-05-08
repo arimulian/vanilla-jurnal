@@ -81,4 +81,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Sales
     Route::post('/sales/create', [SalesController::class, 'store'])
         ->name('sales.create');
+    Route::get('/sales/get', [SalesController::class, 'get'])
+        ->name('sales.get');
 });

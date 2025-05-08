@@ -36,7 +36,7 @@ class Sales extends Model
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->no_sales = 'SLS-' . date('Ymd') . '-' . str_pad($model->count() + 1, 4, '0', STR_PAD_LEFT);
+            $model->no_sales = 'INV-' . date('Ymd') . '-' . str_pad($model->count() + 1, 4, '0', STR_PAD_LEFT);
             $model->date = now()->format('Ymd');
         });
     }
