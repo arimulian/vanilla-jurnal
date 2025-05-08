@@ -30,7 +30,6 @@ class ProductController extends Controller
             'category_id' => $validatedData['category_id'],
             'sku' => $validatedData['sku'] ?? null,
             'barcode' => $validatedData['barcode'] ?? null,
-            'slug' => Str::slug($validatedData['name']),
         ]);
         //if image is present, save it
         if ($request->hasFile('image')) {

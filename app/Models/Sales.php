@@ -26,4 +26,18 @@ class Sales extends Model
     {
         return $this->belongsTo(Branch::class);
     }
+
+    public function salesItems()
+    {
+        return $this->hasMany(SalesItem::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->no_sales = 'SLS-' . date('Ymd') . '-' . str_pad($model->count() + 1, 4, '0', STR_PAD_LEFT);
+            $model->date = now()->format('Ymd');
+        });
+    }
 }

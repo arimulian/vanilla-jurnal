@@ -32,7 +32,6 @@ class CategoryController extends Controller
         $category->update([
             'name' => $validatedData['name'],
             'category_type' => $validatedData['category_type'],
-            'slug' => Str::slug($validatedData['name']),
         ]);
 
         return response()->json([

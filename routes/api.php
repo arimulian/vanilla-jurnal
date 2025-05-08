@@ -3,6 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
@@ -76,4 +77,8 @@ Route::middleware('auth:sanctum')->group(function () {
         ->name('branches.delete');
     Route::put('/branches/update/{branchId}', [BranchController::class, 'update'])
         ->name('branches.update');
+
+    // Sales
+    Route::post('/sales/create', [SalesController::class, 'store'])
+        ->name('sales.create');
 });

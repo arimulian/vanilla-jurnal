@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
@@ -26,4 +28,12 @@ class Category extends Model
     // {
     //     return 'slug';
     // }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->slug = Str::slug($model->name);
+        });
+    }
 }
