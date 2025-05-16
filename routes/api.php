@@ -1,21 +1,24 @@
 <?php
 
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\AuthMiddleware;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\BranchController;
+use App\Http\Middleware\ForceJsonResponse;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Middleware\SanctumAuthenticate;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/unauthenticated', [AuthController::class, 'unauthenticated'])->name('login');
 Route::middleware('auth:sanctum')->group(function () {
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])
@@ -33,9 +36,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Products
     Route::post('/products/create', [ProductController::class, 'create'])
         ->name('products.create');
-    Route::get('/products/get', [ProductController::class, 'get'])
+    Route::get('/products', [ProductController::class, 'get'])
         ->name('products.get');
-    Route::get('/products/get/{slug}', [ProductController::class, 'getBySlug'])
+    Route::get('/products/{slug}', [ProductController::class, 'getBySlug'])
         ->name('products.getBySlug');
     Route::put('/products/update/{slug}', [ProductController::class, 'update'])
         ->name('products.update');
@@ -83,4 +86,4 @@ Route::middleware('auth:sanctum')->group(function () {
         ->name('sales.create');
     Route::get('/sales/get', [SalesController::class, 'get'])
         ->name('sales.get');
-});
+})->prefix('v1');

@@ -12,7 +12,7 @@ class CategoryUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user() != null;
+        return $this->user() !== null;
     }
 
     /**

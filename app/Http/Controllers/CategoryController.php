@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Str;
 use App\Http\Requests\CategoryCreateRequest;
 use App\Http\Requests\CategoryUpdateRequest;
@@ -10,10 +12,14 @@ use Illuminate\Http\JsonResponse;
 
 class CategoryController extends Controller
 {
-
     public function create(CategoryCreateRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
+        if (Category::query()->where('name', $validatedData['name'])->exists()) {
+            return response()->json([
+                'message' => 'Category already exists',
+            ], 422);
+        }
         $category = Category::query()->create([
             'name' => $validatedData['name'],
             'category_type' => $validatedData['category_type'],

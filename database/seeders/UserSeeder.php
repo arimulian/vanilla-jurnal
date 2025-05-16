@@ -21,6 +21,6 @@ class UserSeeder extends Seeder
             'password' => Hash::make('test'),
             'remember_token' => null,
             'role' => 'admin',
-        ])->createToken('test')->plainTextToken;
+        ]);
     }
 }

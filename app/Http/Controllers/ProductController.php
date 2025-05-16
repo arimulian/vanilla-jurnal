@@ -48,10 +48,11 @@ class ProductController extends Controller
 
     public function get(): JsonResponse
     {
-        $products = Product::all();
-        return response()->json([
-            'data' => $products,
-        ], 200);
+        $products = Product::query()
+            ->with('category', 'category:id,name')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        return response()->json($products, 200);
     }
 
     public function getBySlug(string $slug): JsonResponse
