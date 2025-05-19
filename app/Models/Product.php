@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Number;
 
 class Product extends Model
 {
@@ -10,7 +11,20 @@ class Product extends Model
     protected $primaryKey = 'id';
     protected $keyType = 'int';
 
-    protected $guarded = false;
+    protected $guarded = ['id'];
+
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'cost_price',
+        'stock',
+        'category_id',
+        'sku',
+        'barcode',
+        'image',
+    ];
+
 
     public function category()
     {

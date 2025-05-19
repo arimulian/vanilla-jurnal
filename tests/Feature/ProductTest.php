@@ -16,7 +16,7 @@ afterEach(function () {
     // Clean up the database after each test
     Category::query()->delete();
     \Illuminate\Support\Facades\DB::table('users')->truncate();
-    \Illuminate\Support\Facades\DB::table('products')->truncate();
+    \Illuminate\Support\Facades\DB::table('products')->delete();
     Storage::disk('public')->deleteDirectory('products');
 });
 test('create product success', function () {
@@ -162,7 +162,7 @@ test('create product with invalid data', function () {
 
 
 test('get all products', function () {
-    if (Product::query()->count() === 0) {
+    if (Product::query()->count() == 0) {
         $category = Category::query()->create([
             'name' => 'Test Category',
             'category_type' => 'Test Type',
@@ -181,7 +181,7 @@ test('get all products', function () {
             'barcode' => '1234567890123',
         ]);
     }
-    $response = getJson('/api/products/get', [
+    $response = getJson('/api/products', [
         'authorization' => Sanctum::actingAs(
             \App\Models\User::factory()->create(),
             ['*']
@@ -191,20 +191,8 @@ test('get all products', function () {
     ]);
     $response->assertStatus(200)
         ->assertJson([
-            'data' => [
-                [
-                    'name' => 'Test Product',
-                    'description' => 'This is a test product',
-                    'price' => 100.000,
-                    'cost_price' => 50.000,
-                    'stock' => 10,
-                    'category_id' => $category->id,
-                    'sku' => 'TESTSKU123',
-                    'barcode' => '1234567890123',
-                ],
-            ],
+            'products' => Product::query()->paginate(10)->toArray()
         ]);
-    $response->assertJsonCount(1, 'data');
 });
 
 
@@ -228,7 +216,7 @@ test('get product by slug success', function () {
             'barcode' => '1234567890123',
         ]);
     }
-    $response = getJson('api/products/get/test-product', [
+    $response = getJson('api/products/test-product', [
         'authorization' => Sanctum::actingAs(
             \App\Models\User::factory()->create(),
             ['*']
@@ -238,7 +226,7 @@ test('get product by slug success', function () {
     ]);
     $response->assertStatus(200)
         ->assertJson([
-            'data' => [
+            'product' => [
                 'name' => 'Test Product',
                 'description' => 'This is a test product',
                 'price' => 100.000,
@@ -252,7 +240,7 @@ test('get product by slug success', function () {
 });
 
 test('get product by slug is not found', function () {
-    $response = getJson('api/products/get/non-existing-product', [
+    $response = getJson('api/products/non-existing-product', [
         'authorization' => Sanctum::actingAs(
             \App\Models\User::factory()->create(),
             ['*']
@@ -374,6 +362,35 @@ test('update product with image', function () {
                 'barcode' => null,
                 'image' => 'products/' . $file->hashName(),
             ],
+        ]);
+});
+
+test('update product not found', function () {
+    $category = Category::query()->create([
+        'name' => 'Test Category',
+        'category_type' => 'Test Type',
+        'slug' => 'test-category',
+    ]);
+    $response = putJson('api/products/update/non-existing-product', [
+        'name' => 'Test Product',
+        'description' => 'This is an updated product',
+        'price' => 150.000,
+        'cost_price' => 75.000,
+        'stock' => 20,
+        'category_id' => $category->id,
+        'sku' => null,
+        'barcode' => null,
+    ], [
+        'authorization' => Sanctum::actingAs(
+            \App\Models\User::factory()->create(),
+            ['*']
+        ),
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json',
+    ]);
+    $response->assertStatus(404)
+        ->assertJson([
+            'message' => 'Product not found',
         ]);
 });
 

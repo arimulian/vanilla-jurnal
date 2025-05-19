@@ -86,4 +86,4 @@ Route::middleware('auth:sanctum')->group(function () {
         ->name('sales.create');
     Route::get('/sales/get', [SalesController::class, 'get'])
         ->name('sales.get');
-})->prefix('v1');
+});

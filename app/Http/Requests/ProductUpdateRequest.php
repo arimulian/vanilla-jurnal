@@ -28,9 +28,7 @@ class ProductUpdateRequest extends FormRequest
             'cost_price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'category_id' => 'required|integer|exists:categories,id',
-            'sku' => 'nullable|string|max:255',
-            'barcode' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'sku' => 'nullable|string|max:255|unique:products,sku',
         ];
     }
 
